@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "hexlet-code"
+version = "0.1.0"
+description = "gendiff - project, wich show internal representation of the diff between the files"
+authors = ["Daniil Balabanov <spacewalrus@bk.ru>"]
+readme = "README.md"
+packages = [{include = "gendiff"}]
+repository = "https://github.com/spacewalrus73/python-project-50"
+classifiers = [
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.10",
+    "Environment :: Console",
+    "Topic :: Education",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Terminals"
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytest = "^7.2.1"
+flake8 = "^6.0.0"
+prompt = "^0.4.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+gendiff = "gendiff.scripts.gendiff:main"
