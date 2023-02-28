@@ -19,4 +19,4 @@ package-reinstall:
 
 
 lint:
-	poetry run flake8 python-project-50
+	poetry run flake8 gendiff
