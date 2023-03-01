@@ -11,7 +11,7 @@ def from_file_to_var(filepath: str) -> dict:
     return data
 
 
-def from_var_to_file(var: dict) -> json:
+def from_var_to_file(var) -> json:
     """The function writes data to the file.json
     Input - dictionary, Output - file.json"""
     with open('output_file.json', 'w') as file:
@@ -31,19 +31,18 @@ def generate_diff(file_path1: str, file_path2: str):
     str_lst = []
 
     for value in diff_1:
-        str = f'- {value}: {file_content1[value]}'
-        str_lst.append(str)
+        str_lst.append(f'  - {value}: {file_content1[value]}')
 
     for value in diff_2:
-        str_lst.append(f'+ {value}: {file_content2[value]}')
+        str_lst.append(f'  + {value}: {file_content2[value]}')
 
     for value in intersection:
         if file_content1[value] == file_content2[value]:
-            str_lst.append(f'  {value}: {file_content2[value]}')
+            str_lst.append(f'    {value}: {file_content2[value]}')
         else:
-            str_lst.append(f'- {value}: {file_content1[value]}\n'
-                           f'+ {value}: {file_content2[value]}')
+            str_lst.append(f'  - {value}: {file_content1[value]}'
+                           f'\n  + {value}: {file_content2[value]}')
 
-    str_lst = sorted(str_lst, key=itemgetter(2))
-    result = '{\n' + " \n".join(str_lst) + '\n}'
+    str_lst = sorted(str_lst, key=itemgetter(4))
+    result = '{\n' + "\n".join(str_lst) + '\n}'
     return result
