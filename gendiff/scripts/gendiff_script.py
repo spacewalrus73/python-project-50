@@ -10,6 +10,7 @@ args = parser.parse_args()
 dir1 = args.first_file
 dir2 = args.second_file
 
+
 def parse():
     parser.parse_args()
     if dir1 and dir2:
