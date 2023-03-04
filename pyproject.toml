@@ -19,12 +19,13 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.10"
 flake8 = "^6.0.0"
-prompt = "^0.4.1"
-pytest-cov = "^4.0.0"
+pyyaml = "^6.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
+
 
 [build-system]
 requires = ["poetry-core"]
@@ -32,4 +33,4 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry.scripts]
-gendiff = "gendiff.scripts.gendiff_script:parse"
+gendiff = "gendiff.scripts.gendiff_script:main"
