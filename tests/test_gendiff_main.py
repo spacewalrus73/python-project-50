@@ -59,6 +59,7 @@ def test_generate_diff():
     plain_plain = to_read_data('tests/fixtures/plain_plain.txt')
     nested_stylish = to_read_data('tests/fixtures/nest_stylish.txt')
     nested_plain = to_read_data('tests/fixtures/nest_plain.txt')
+    json_plain = to_read_data('tests/fixtures/expected_json.txt')
 
     assert plain_stylish == generate_diff(simple_d[0],
                                           simple_d[1],
@@ -72,3 +73,6 @@ def test_generate_diff():
     assert nested_plain == generate_diff(complex_d[0],
                                          complex_d[1],
                                          frmt='plain')
+    assert json_plain == generate_diff(simple_d[0],
+                                       simple_d[1],
+                                       frmt='json')
