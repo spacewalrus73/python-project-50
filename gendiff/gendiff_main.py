@@ -1,4 +1,5 @@
-from gendiff.make_view import stylish
+from gendiff.formatters.format_stylish import stylish
+from gendiff.formatters.format_plain import plain
 
 
 def generate_diff(file1: dict, file2: dict, frmt='stylish') -> str:
@@ -7,9 +8,10 @@ def generate_diff(file1: dict, file2: dict, frmt='stylish') -> str:
     outputs them in the desired display format.
     """
     diff = to_form_diff(file1, file2, to_find_diff(file1, file2))
-
     if frmt == 'stylish':
         return stylish(diff)
+    else:
+        return plain(diff)
 
 
 def to_find_diff(item_1: dict, item_2: dict) -> list:
@@ -36,10 +38,6 @@ def to_form_diff(item1: dict, item2: dict, sets: list) -> dict:
     """
     The function generates an internal diff view using a loop
     that populates the dictionary and also sorts the keys.
-    :param item1: dict
-    :param item2: dict
-    :param sets: list
-    :return: dict
     """
     # Assign empty dict to be filled by cycle that sort keys
     diff = {}
@@ -68,4 +66,5 @@ def is_dicts(item_1, item_2) -> bool:
 
 __all__ = ('generate_diff',
            'is_dicts',
-           'to_find_diff')
+           'to_find_diff',
+           'to_form_diff')
