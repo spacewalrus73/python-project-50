@@ -23,12 +23,16 @@ def from_json_to_dict(filepath: str) -> dict:
     return data
 
 
-def to_encode(value: Any) -> str:
-    """The function encodes value to json format view
+def to_encode(value: Any, quotes=None) -> str:
+    """The function encodes value to json/yml format view.
+    Flag quotes returns string with quotes.
     Input - any type
-    Output - json string."""
-    if type(value) is str:
-        return value
+    Output - json/yml string."""
+    if isinstance(value, str):
+        if quotes:
+            return f"'{value}'"
+        else:
+            return value
     else:
         return json.JSONEncoder().encode(value)
 
