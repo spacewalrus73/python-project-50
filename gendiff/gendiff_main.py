@@ -1,5 +1,6 @@
 from gendiff.formatters.format_stylish import stylish
 from gendiff.formatters.format_plain import plain
+from gendiff.formatters.format_json import json
 
 
 def generate_diff(file1: dict, file2: dict, frmt='stylish') -> str:
@@ -10,8 +11,10 @@ def generate_diff(file1: dict, file2: dict, frmt='stylish') -> str:
     diff = to_form_diff(file1, file2, to_find_diff(file1, file2))
     if frmt == 'stylish':
         return stylish(diff)
-    else:
+    elif frmt == 'plain':
         return plain(diff)
+    else:
+        return json(diff)
 
 
 def to_find_diff(item_1: dict, item_2: dict) -> list:
