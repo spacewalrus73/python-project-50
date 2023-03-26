@@ -1,4 +1,4 @@
-from gendiff.encode import to_encode, from_json_to_dict, from_yaml_to_dict
+from gendiff.decoder import to_encode, from_json_to_dict, from_yaml_to_dict
 from tests.fixtures.example_dict import simple_d, complex_d
 
 

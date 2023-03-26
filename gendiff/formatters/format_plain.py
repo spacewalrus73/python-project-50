@@ -1,4 +1,4 @@
-from gendiff.encode import to_encode
+from gendiff.decoder import to_encode
 
 
 def plain(diff: dict, path_str='', depth=1) -> str:

@@ -1,5 +1,5 @@
 from itertools import chain
-from gendiff.encode import to_encode
+from gendiff.decoder import to_encode
 
 
 def stylish(value, spacer=' ', def_indent=4):
