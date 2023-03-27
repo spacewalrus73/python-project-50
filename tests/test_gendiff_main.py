@@ -61,18 +61,18 @@ def test_generate_diff():
     nested_plain = to_read_data('tests/fixtures/nest_plain.txt')
     json_plain = to_read_data('tests/fixtures/expected_json.txt')
 
-    assert plain_stylish == generate_diff(simple_d[0],
-                                          simple_d[1],
+    assert plain_stylish == generate_diff('tests/fixtures/filepath1.json',
+                                          'tests/fixtures/filepath2.json',
                                           frmt='stylish')
-    assert plain_plain == generate_diff(simple_d[0],
-                                        simple_d[1],
+    assert plain_plain == generate_diff('tests/fixtures/filepath1.yml',
+                                        'tests/fixtures/filepath2.yml',
                                         frmt='plain')
-    assert nested_stylish == generate_diff(complex_d[0],
-                                           complex_d[1],
+    assert nested_stylish == generate_diff('tests/fixtures/file1.json',
+                                           'tests/fixtures/file2.json',
                                            frmt='stylish')
-    assert nested_plain == generate_diff(complex_d[0],
-                                         complex_d[1],
+    assert nested_plain == generate_diff('tests/fixtures/file1.yaml',
+                                         'tests/fixtures/file2.yaml',
                                          frmt='plain')
-    assert json_plain == generate_diff(simple_d[0],
-                                       simple_d[1],
+    assert json_plain == generate_diff('tests/fixtures/filepath1.json',
+                                       'tests/fixtures/filepath2.json',
                                        frmt='json')

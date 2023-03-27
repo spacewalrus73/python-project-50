@@ -1,14 +1,17 @@
 from gendiff.formatters.format_stylish import stylish
 from gendiff.formatters.format_plain import plain
 from gendiff.formatters.format_json import json
+from gendiff.decoder import to_decode
 
 
-def generate_diff(file1: dict, file2: dict, frmt='stylish') -> str:
+def generate_diff(path1: str, path2: str, frmt='stylish') -> str:
     """
     The function makes internal view between two files and
     outputs them in the desired display format.
     """
-    diff = to_form_diff(file1, file2, to_find_diff(file1, file2))
+    file_1 = to_decode(path1)
+    file_2 = to_decode(path2)
+    diff = to_form_diff(file_1, file_2, to_find_diff(file_1, file_2))
     if frmt == 'stylish':
         return stylish(diff)
     elif frmt == 'plain':
