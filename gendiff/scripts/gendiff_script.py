@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from gendiff.parser import to_parse
-from gendiff.gendiff_main import generate_diff
+from gendiff.generate_diff import generate_diff
 from gendiff.decoder import to_decode
 
 
