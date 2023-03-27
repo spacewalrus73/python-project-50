@@ -57,7 +57,7 @@ def test_is_dicts():
 def test_generate_diff():
     plain_stylish = to_read_data('tests/fixtures/plain_stylish.txt')
     plain_plain = to_read_data('tests/fixtures/plain_plain.txt')
-    nested_stylish = to_read_data('tests/fixtures/nest_stylish.txt')
+    nested_stylish = to_read_data('tests/fixtures/nst_stylish.txt')
     nested_plain = to_read_data('tests/fixtures/nest_plain.txt')
     json_plain = to_read_data('tests/fixtures/expected_json.txt')
 
