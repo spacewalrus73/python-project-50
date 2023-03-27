@@ -22,25 +22,11 @@ def stylish(value, spacer=' ', def_indent=4):
                 continue
             if len(val) == 2:
                 strings.append(
-                    f'{spacers}{val[0]} {key}:{is_gap(val[1])}'
-                    f'{stringify(val[1], depth + 1)}')
+                    f'{spacers}{val[0]} {key}: {stringify(val[1], depth + 1)}')
             else:
                 strings.append(
-                    f'{spacers}{val[0]} {key}:{is_gap(val[1])}'
-                    f'{stringify(val[1], depth + 1)}')
+                    f'{spacers}{val[0]} {key}: {stringify(val[1], depth + 1)}')
                 strings.append(
-                    f'{spacers}{val[2]} {key}:{is_gap(val[3])}'
-                    f'{stringify(val[3], depth + 1)}')
+                    f'{spacers}{val[2]} {key}: {stringify(val[3], depth + 1)}')
         return '\n'.join(chain('{', strings, [after_str + '}']))
     return stringify(value, 1)
-
-
-def is_gap(value):
-    """
-    Simple function that returns an empty string if the value is
-    an empty string, otherwise a string indent value is returned.
-    """
-    if value == '':
-        return ''
-    else:
-        return ' '
