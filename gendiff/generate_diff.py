@@ -70,7 +70,4 @@ def is_dicts(item_1, item_2) -> bool:
     return all(list(map(lambda x: isinstance(x, dict), [item_1, item_2])))
 
 
-__all__ = ('generate_diff',
-           'is_dicts',
-           'to_find_diff',
-           'to_form_diff')
+__all__ = 'generate_diff'
