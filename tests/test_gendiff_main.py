@@ -1,6 +1,6 @@
 import os
-from gendiff.gendiff_main import generate_diff, is_dicts
-from gendiff.gendiff_main import to_form_diff, to_find_diff
+from gendiff.generate_diff import generate_diff, is_dicts
+from gendiff.generate_diff import to_form_diff, to_find_diff
 from tests.fixtures.example_dict import simple_d, complex_d
 from tests.fixtures.example_diff import ex_diff
 
