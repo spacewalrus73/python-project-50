@@ -32,7 +32,7 @@ def mk_string(value, _, d):
         elif i['status'] == 'plain_changes':
             lines.append(
                 f'{_}- {i["name"]}: {stylish(i["val1"], dep=d + 1)}\n'
-                f'{_}+ {i["name"]}: {stylish(i["val2"])}')
+                f'{_}+ {i["name"]}: {stylish(i["val2"], dep=d + 1)}')
         elif i['status'] == 'added':
             lines.append(f'{_}+ {i["name"]}: {stylish(i["val"], dep=d + 1)}')
         elif i['status'] == 'deleted':
