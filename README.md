@@ -13,6 +13,8 @@ __________________________________________
 ![](https://img.shields.io/badge/Python-v3.10-yellow?style=plastic&logo=python)  ![](https://img.shields.io/badge/flake8-v5.0.4-black?style=plastic&logo=flake8)  ![](https://img.shields.io/badge/Pyyaml-v6.0-yellow?style=plastic&logo=Python)  
 ![](https://img.shields.io/badge/Poetry-v1.3.2-blue?style=plastic&logo=poetry)  ![](https://img.shields.io/badge/Pytest-v7.2.1-yellowgreen?style=plastic&logo=Pytest)  ![](https://img.shields.io/badge/Git-v2.34.1-orange?style=plastic&logo=Git)
 ----
+## _System requirements_
+![](https://img.shields.io/badge/-OS%20Linux-black?style=plastic&logo=Linux) ![](https://img.shields.io/badge/-macOS-silver?style=plastic&logo=apple) ![](https://img.shields.io/badge/-OS%20Windows-9cf?style=plastic&logo=windows)
 ## _About difference generator_
 Difference generator - a program that determines the difference between two data structures.  
 Such a mechanism is used, for example, when outputting tests or when automatically tracking changes  
@@ -64,6 +66,4 @@ Plain format of two nested files
 ![](https://raw.githubusercontent.com/spacewalrus73/Gifs/master/gif_2prj/plain.gif)  
 ***
 Output _JSON_ format  
-![](https://raw.githubusercontent.com/spacewalrus73/Gifs/master/gif_2prj/json_f.gif)  
-### _System requirements_
-![](https://img.shields.io/badge/-OS%20Linux-black?style=plastic&logo=Linux) ![](https://img.shields.io/badge/-MacOs-silver?style=plastic&logo=apple) ![](https://img.shields.io/badge/-OS%20Windows-9cf?style=plastic&logo=windows)
+![](https://raw.githubusercontent.com/spacewalrus73/Gifs/master/gif_2prj/json_f.gif)
