@@ -2,31 +2,41 @@ from itertools import chain
 from gendiff.decoder import to_encode
 
 
-def stylish(value, spacer=' ', def_indent=4):
-    def stringify(cur_val, depth):
+def stylish(value, spacer=' ', def_indent=4, dep=1):
 
-        if not isinstance(cur_val, dict):
-            return to_encode(cur_val)
+    lines = []
 
-        strings = []
+    sym_idx = 2 * (2 * dep - 1)
+    spacers = spacer * sym_idx
+    after_str = (def_indent * (dep - 1)) * spacer
 
-        sym_idx = 2 * (2 * depth - 1)
-        spacers = spacer * sym_idx
-        after_str = (def_indent * (depth - 1)) * spacer
+    if isinstance(value, dict):
+        for k, v in value.items():
+            lines.append(f'{spacers}  {k}: {stylish(v, dep=dep + 1)}')
+    elif isinstance(value, list):
+        lines.append(mk_string(value, spacers, dep))
+    else:
+        return to_encode(value)
 
-        for key, val in cur_val.items():
+    return '\n'.join(chain('{', lines, [after_str + '}']))
 
-            if not isinstance(val, tuple):
-                strings.append(
-                    f'{spacers}  {key}: {stringify(val, depth + 1)}')
-                continue
-            if len(val) == 2:
-                strings.append(
-                    f'{spacers}{val[0]} {key}: {stringify(val[1], depth + 1)}')
-            else:
-                strings.append(
-                    f'{spacers}{val[0]} {key}: {stringify(val[1], depth + 1)}')
-                strings.append(
-                    f'{spacers}{val[2]} {key}: {stringify(val[3], depth + 1)}')
-        return '\n'.join(chain('{', strings, [after_str + '}']))
-    return stringify(value, 1)
+
+def mk_string(value, _, d):
+
+    lines = []
+
+    for i in value:
+        if i['status'] == 'nested_changes':
+            lines.append(
+                f'{_}  {i["name"]}: {stylish(i["val"], dep=d + 1)}')
+        elif i['status'] == 'plain_changes':
+            lines.append(
+                f'{_}- {i["name"]}: {stylish(i["val1"], dep=d + 1)}\n'
+                f'{_}+ {i["name"]}: {stylish(i["val2"])}')
+        elif i['status'] == 'added':
+            lines.append(f'{_}+ {i["name"]}: {stylish(i["val"], dep=d + 1)}')
+        elif i['status'] == 'deleted':
+            lines.append(f'{_}- {i["name"]}: {stylish(i["val"], dep=d + 1)}')
+        else:
+            lines.append(f'{_}  {i["name"]}: {stylish(i["val"], dep=d + 1)}')
+    return '\n'.join(chain(lines))

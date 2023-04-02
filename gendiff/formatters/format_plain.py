@@ -1,47 +1,51 @@
 from gendiff.decoder import to_encode
 
 
-def plain(diff: dict, path_str='', depth=1) -> str:
+def plain(diff, path_str='') -> str:
 
     lines = []
-    for key, item in diff.items():
-        path = path_str + f'.{key}'
-        if not isinstance(item, tuple):
-            lines.append(plain(item, path_str=path, depth=depth + 1))
-        elif item[0] == '+':
-            lines.append(
-                craft_ad(path, item, flag=isinstance(item[1], dict)))
-        elif item[0] == '-' and len(item) != 4:
-            lines.append(craft_rm(path))
-        elif len(item) == 4:
-            lines.append(craft_ch(path, item))
-        else:
-            continue
+
+    for item in diff:
+        path = path_str + f'.{item["name"]}'
+        if item["status"] == 'nested_changes':
+            lines.append(plain(item["val"], path))
+        elif item["status"] == 'added':
+            lines.append(add_str(item["val"],
+                                 path,
+                                 isinstance(item['val'], dict)))
+        elif item["status"] == 'deleted':
+            lines.append(del_str(path))
+        elif item["status"] == 'plain_changes':
+            lines.append(chang_str(path, item["val1"], item["val2"]))
+
     return '\n'.join(lines)
 
 
-def craft_ch(path, val):
-    if isinstance(val[1], dict) and isinstance(val[3], dict):
-        return f"Property '{path[1:]}' was updated. " \
-               f'From [complex value] to [complex value]'
-    elif isinstance(val[1], dict):
-        return f"Property '{path[1:]}' was updated. " \
-               f'From [complex value] to {to_encode(val[3], True)}'
-    elif isinstance(val[3], dict):
-        return f"Property '{path[1:]}' was updated. " \
-               f'From {to_encode(val[1], True)} to [complex value]'
+def add_str(value, path: str, flag: bool):
+
+    if not flag:
+        return f"Property '{path[1:]}' was added with value: " \
+               f"{to_encode(value, quotes=True)}"
     else:
-        return f"Property '{path[1:]}' was updated. " \
-               f"From {to_encode(val[1], True)} to {to_encode(val[3], True)}"
+        return f"Property '{path[1:]}' was added with value: [complex value]"
 
 
-def craft_rm(path: str) -> str:
+def del_str(path):
     return f"Property '{path[1:]}' was removed"
 
 
-def craft_ad(path: str, val, flag: bool) -> str:
-    if not flag:
-        return f"Property '{path[1:]}' was added with value: " \
-               f"{to_encode(val[1], True)}"
+def chang_str(path, val1, val2):
+
+    if isinstance(val1, dict) and isinstance(val2, dict):
+        return f"Property '{path[1:]}' was updated. " \
+               f"From [complex value] to [complex value]"
+    elif isinstance(val1, dict):
+        return f"Property '{path[1:]}' was updated. " \
+               f"From [complex value] to {to_encode(val2, quotes=True)}"
+    elif isinstance(val2, dict):
+        return f"Property '{path[1:]}' was updated. " \
+               f"From {to_encode(val1, quotes=True)} to [complex value]"
     else:
-        return f"Property '{path[1:]}' was added with value: [complex value]"
+        return f"Property '{path[1:]}' was updated. " \
+               f"From {to_encode(val1, quotes=True)} to " \
+               f"{to_encode(val2, quotes=True)}"

@@ -9,58 +9,50 @@ def generate_diff(path1: str, path2: str, frmt='stylish') -> str:
     The function makes internal view between two files and
     outputs them in the desired display format.
     """
-    file_1 = to_decode(path1)
-    file_2 = to_decode(path2)
-    diff = to_form_diff(file_1, file_2, to_find_diff(file_1, file_2))
-    if frmt == 'stylish':
+    diff = make_internal_view(to_decode(path1), to_decode(path2))
+    return select_format(diff, frmt)
+
+
+def select_format(diff, form):
+
+    if form.lower().strip() == 'stylish':
         return stylish(diff)
-    elif frmt == 'plain':
+    elif form.lower().strip() == 'plain':
         return plain(diff)
-    else:
+    elif form.lower().strip() == 'json':
         return json(diff)
+    else:
+        return "Incorrect output format! Check the format name."
 
 
-def to_find_diff(item_1: dict, item_2: dict) -> list:
-    """The function distributes keys to collections, thus finding the
-    differences between the files. Returns list of sets."""
-
-    # Find remoted keys that exist in the first dict, but not in the second
-    deleted = set.difference(set(item_1), set(item_2))
-    # Find added keys that exist in the second dict, but not in the first
-    added = set.difference(set(item_2), set(item_1))
-    # Find intersect keys that exist in both files and fill the empty sets
-    changed = set()
-    unchanged = set()
-
-    for key in set.intersection(set(item_1), set(item_2)):
-        if item_1[key] == item_2[key]:
-            unchanged.add(key)
-        else:
-            changed.add(key)
-    return [deleted, added, changed, unchanged]
-
-
-def to_form_diff(item1: dict, item2: dict, sets: list) -> dict:
+def make_internal_view(item1: dict, item2: dict) -> list:
     """
-    The function generates an internal diff view using a loop
-    that populates the dictionary and also sorts the keys.
+    The function sorts the keys and also generates an
+    internal representation as {'name': key,
+                                'val': value:{}/[]/Any,
+                                'status': 'added'/'deleted' etc.}
     """
-    # Assign empty dict to be filled by cycle that sort keys
-    diff = {}
-    deleted, added, changed, unchanged = sets
-    for key in sorted(set(item1) | set(item2), key=str):
 
-        if key in deleted:
-            diff[key] = ('-', item1[key])
-        elif key in added:
-            diff[key] = ('+', item2[key])
-        elif key in unchanged:
-            diff[key] = (' ', item1[key])
+    diff = []
+    all_keys = sorted(set(item1) | set(item2), key=str)
+
+    for key in all_keys:
+        if key not in item1:
+            diff.append({'name': key, 'val': item2[key], 'status': 'added'})
+        elif key not in item2:
+            diff.append({'name': key, 'val': item1[key], 'status': 'deleted'})
+        elif item1[key] == item2[key]:
+            diff.append({'name': key, 'val': item1[key], 'status': 'unchanged'})
         elif is_dicts(item1[key], item2[key]):
-            diff[key] = to_form_diff(item1[key], item2[key],
-                                     to_find_diff(item1[key], item2[key]))
+            diff.append({'name': key,
+                         'val': make_internal_view(item1[key], item2[key]),
+                         'status': 'nested_changes'})
         else:
-            diff[key] = ('-', item1[key], '+', item2[key])
+            diff.append({'name': key,
+                         'val1': item1[key],
+                         'val2': item2[key],
+                         'status': 'plain_changes'})
+
     return diff
 
 
