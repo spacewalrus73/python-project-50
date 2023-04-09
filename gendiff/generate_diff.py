@@ -33,11 +33,6 @@ def execute_format(diff, output_style):
 
 
 def make_internal_view(item1: dict, item2: dict) -> list:
-    """
-    The function sorts the keys and also generates an
-    internal representation as
-    {'name': key, 'val': value:Any, 'status': 'added'/'deleted' etc.}
-    """
 
     diff = []
     all_keys = sorted(set(item1) | set(item2), key=str)
@@ -45,10 +40,14 @@ def make_internal_view(item1: dict, item2: dict) -> list:
     for key in all_keys:
 
         if key not in item1:
-            diff.append({'name': key, 'value': item2[key], 'status': 'added'})
+            diff.append({'name': key,
+                         'value': item2[key],
+                         'status': 'added'})
 
         elif key not in item2:
-            diff.append({'name': key, 'value': item1[key], 'status': 'deleted'})
+            diff.append({'name': key,
+                         'value': item1[key],
+                         'status': 'deleted'})
 
         elif item1[key] == item2[key]:
             diff.append({'name': key,
