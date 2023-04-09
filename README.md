@@ -15,6 +15,7 @@ __________________________________________
 ----
 ## _System requirements_
 ![](https://img.shields.io/badge/-OS%20Linux-black?style=plastic&logo=Linux) ![](https://img.shields.io/badge/-macOS-silver?style=plastic&logo=apple) ![](https://img.shields.io/badge/-OS%20Windows-9cf?style=plastic&logo=windows)
+___
 ## _About difference generator_
 Difference generator - a program that determines the difference between two data structures.  
 Such a mechanism is used, for example, when outputting tests or when automatically tracking changes  
