@@ -13,7 +13,15 @@ data = [('tests/fixtures/example_json/file1_nested.json',
         ('tests/fixtures/example_yml/nested.yaml',
          'tests/fixtures/example_json/file2_nested.json',
          'tests/fixtures/expected_results/nested_json.txt',
-         'json')]
+         'json'),
+        ('tests/fixtures/example_yml/nested.yaml',
+         'tests/fixtures/example_yml/nested.yaml',
+         'tests/fixtures/expected_results/incorrect_format.txt',
+         'non-existent format'),
+        ('tests/fixtures/example_json/file1_nested.json',
+         'tests/fixtures/example_json/file2_nested.json',
+         'tests/fixtures/expected_results/nested_plain.txt',
+         'plain')]
 
 
 @pytest.mark.parametrize("file1, file2, expected_result, style", data)
