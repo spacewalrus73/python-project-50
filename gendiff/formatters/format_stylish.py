@@ -2,41 +2,66 @@ from itertools import chain
 from gendiff.decoder import to_encode
 
 
-def stylish(value, spacer=' ', def_indent=4, dep=1):
+def stylish(value, depth: int = 1):
 
     lines = []
+    spacers, post_spacers = create_indents(depth)
 
-    sym_idx = 2 * (2 * dep - 1)
-    spacers = spacer * sym_idx
-    after_str = (def_indent * (dep - 1)) * spacer
+    for item in value:
 
-    if isinstance(value, dict):
-        for k, v in value.items():
-            lines.append(f'{spacers}  {k}: {stylish(v, dep=dep + 1)}')
-    elif isinstance(value, list):
-        lines.append(mk_string(value, spacers, dep))
-    else:
-        return to_encode(value)
+        sample = f'{spacers}? {item["name"]}: '
+        begin_string = ''
 
-    return '\n'.join(chain('{', lines, [after_str + '}']))
+        if item['status'] == 'plain_changes':
+            begin_string = sample.replace('?', '-', 1)
+            tail = stringify_value(item["old_value"], depth)
+            lines.append(begin_string + tail)
+            begin_string = sample.replace('?', '+', 1)
+            tail = stringify_value(item["new_value"], depth)
+            lines.append(begin_string + tail)
+            continue
 
+        elif item['status'] == 'nested_changes':
+            begin_string = sample.replace('?', ' ', 1)
+            tail = stylish(item["children"], depth=depth + 1)
+            lines.append(begin_string + tail)
+            continue
 
-def mk_string(value, _, d):
+        elif item['status'] == 'added':
+            begin_string = sample.replace('?', '+', 1)
 
-    lines = []
+        elif item['status'] == 'deleted':
+            begin_string = sample.replace('?', '-', 1)
 
-    for i in value:
-        if i['status'] == 'nested_changes':
-            lines.append(
-                f'{_}  {i["name"]}: {stylish(i["val"], dep=d + 1)}')
-        elif i['status'] == 'plain_changes':
-            lines.append(
-                f'{_}- {i["name"]}: {stylish(i["val1"], dep=d + 1)}\n'
-                f'{_}+ {i["name"]}: {stylish(i["val2"], dep=d + 1)}')
-        elif i['status'] == 'added':
-            lines.append(f'{_}+ {i["name"]}: {stylish(i["val"], dep=d + 1)}')
-        elif i['status'] == 'deleted':
-            lines.append(f'{_}- {i["name"]}: {stylish(i["val"], dep=d + 1)}')
         else:
-            lines.append(f'{_}  {i["name"]}: {stylish(i["val"], dep=d + 1)}')
-    return '\n'.join(chain(lines))
+            begin_string = sample.replace('?', ' ', 1)
+
+        lines.append(begin_string + stringify_value(item["value"], depth))
+
+    return '\n'.join(chain('{', lines, [post_spacers + '}']))
+
+
+def stringify_value(item, depth: int) -> str:
+
+    if isinstance(item, dict):
+
+        strings = []
+        spacers, post_spacers = create_indents(depth + 1)
+
+        for key, value in item.items():
+            strings.append(f'{spacers}  {key}: '
+                           f'{stringify_value(value, depth + 1)}')
+
+        return '\n'.join(chain('{', strings, [post_spacers + '}']))
+
+    else:
+        return to_encode(item)
+
+
+def create_indents(depth: int, div=' ', indent: int = 4):
+
+    special_char_index = 2 * (2 * depth - 1)
+    spacers = div * special_char_index
+    post_spacers = div * ((depth - 1) * indent)
+
+    return spacers, post_spacers
