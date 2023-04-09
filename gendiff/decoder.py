@@ -1,18 +1,17 @@
 import json
 import yaml
-import os
 from typing import Any
 from yaml.loader import SafeLoader
 
 
-def to_decode(path: str) -> dict:
-    file = reading_data(path)
-    return from_json_to_dict(file) if is_json(path) else from_yaml_to_dict(file)
+def to_decode(path: str, file_format: str) -> dict:
+    with open(path, 'r') as f:
+        file = f.read()
 
-
-def reading_data(filepath: str):
-    with open(os.path.abspath(filepath), 'r') as file:
-        return file.read()
+    if file_format == 'json':
+        return from_json_to_dict(file)
+    else:
+        return from_yaml_to_dict(file)
 
 
 def from_yaml_to_dict(file) -> dict:
@@ -23,21 +22,9 @@ def from_json_to_dict(file) -> dict:
     return json.loads(file)
 
 
-def to_encode(value: Any, quotes=None) -> str:
-    """The function encodes value to json/yml format view.
-    Flag quotes returns string with quotes.
-    Input - any type
-    Output - json/yml string."""
+def to_encode(value: Any) -> str:
+
     if isinstance(value, str):
-        if quotes:
-            return f"'{value}'"
-        else:
-            return value
+        return value
     else:
         return json.JSONEncoder().encode(value)
-
-
-def is_json(path: str) -> bool:
-    """Simple predicate function to check item's format
-    :return True if format is .json"""
-    return path.endswith('.json')
