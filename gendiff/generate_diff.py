@@ -4,23 +4,30 @@ from gendiff.formatters.format_json import json
 from gendiff.decoder import to_decode
 
 
-def generate_diff(path1: str, path2: str, frmt='stylish') -> str:
+def generate_diff(path1: str, path2: str, output_style='stylish') -> str:
     """
     The function makes internal view between two files and
     outputs them in the desired display format.
     """
-    diff = make_internal_view(to_decode(path1), to_decode(path2))
-    return select_format(diff, frmt)
+    parsed_first_file = to_decode(path1, path1.split('.')[1])
+    parsed_second_file = to_decode(path2, path2.split('.')[1])
+
+    diff = make_internal_view(parsed_first_file, parsed_second_file)
+
+    return execute_format(diff, output_style)
 
 
-def select_format(diff, form):
+def execute_format(diff, output_style):
 
-    if form.lower().strip() == 'stylish':
+    if output_style.lower().strip() == 'stylish':
         return stylish(diff)
-    elif form.lower().strip() == 'plain':
+
+    elif output_style.lower().strip() == 'plain':
         return plain(diff)
-    elif form.lower().strip() == 'json':
+
+    elif output_style.lower().strip() == 'json':
         return json(diff)
+
     else:
         return "Incorrect output format! Check the format name."
 
@@ -28,38 +35,35 @@ def select_format(diff, form):
 def make_internal_view(item1: dict, item2: dict) -> list:
     """
     The function sorts the keys and also generates an
-    internal representation as {'name': key,
-                                'val': value:{}/[]/Any,
-                                'status': 'added'/'deleted' etc.}
+    internal representation as
+    {'name': key, 'val': value:Any, 'status': 'added'/'deleted' etc.}
     """
 
     diff = []
     all_keys = sorted(set(item1) | set(item2), key=str)
 
     for key in all_keys:
+
         if key not in item1:
-            diff.append({'name': key, 'val': item2[key], 'status': 'added'})
+            diff.append({'name': key, 'value': item2[key], 'status': 'added'})
+
         elif key not in item2:
-            diff.append({'name': key, 'val': item1[key], 'status': 'deleted'})
+            diff.append({'name': key, 'value': item1[key], 'status': 'deleted'})
+
         elif item1[key] == item2[key]:
-            diff.append({'name': key, 'val': item1[key], 'status': 'unchanged'})
-        elif is_dicts(item1[key], item2[key]):
             diff.append({'name': key,
-                         'val': make_internal_view(item1[key], item2[key]),
+                         'value': item1[key],
+                         'status': 'unchanged'})
+
+        elif isinstance(item1[key], dict) and isinstance(item2[key], dict):
+            diff.append({'name': key,
+                         'children': make_internal_view(item1[key], item2[key]),
                          'status': 'nested_changes'})
+
         else:
             diff.append({'name': key,
-                         'val1': item1[key],
-                         'val2': item2[key],
+                         'old_value': item1[key],
+                         'new_value': item2[key],
                          'status': 'plain_changes'})
 
     return diff
-
-
-def is_dicts(item_1, item_2) -> bool:
-    """Predicate function to check for item's type.
-    Returns 'True' if both of items are dicts."""
-    return all(list(map(lambda x: isinstance(x, dict), [item_1, item_2])))
-
-
-__all__ = 'generate_diff'
