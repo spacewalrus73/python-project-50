@@ -10,7 +10,6 @@ def stylish(value, depth: int = 1):
     for item in value:
 
         sample = f'{spacers}? {item["name"]}: '
-        begin_string = ''
 
         if item['status'] == 'plain_changes':
             begin_string = sample.replace('?', '-', 1)
@@ -19,24 +18,23 @@ def stylish(value, depth: int = 1):
             begin_string = sample.replace('?', '+', 1)
             tail = stringify_value(item["new_value"], depth)
             lines.append(begin_string + tail)
-            continue
 
         elif item['status'] == 'nested_changes':
             begin_string = sample.replace('?', ' ', 1)
             tail = stylish(item["children"], depth=depth + 1)
             lines.append(begin_string + tail)
-            continue
 
         elif item['status'] == 'added':
             begin_string = sample.replace('?', '+', 1)
+            lines.append(begin_string + stringify_value(item["value"], depth))
 
         elif item['status'] == 'deleted':
             begin_string = sample.replace('?', '-', 1)
+            lines.append(begin_string + stringify_value(item["value"], depth))
 
         else:
             begin_string = sample.replace('?', ' ', 1)
-
-        lines.append(begin_string + stringify_value(item["value"], depth))
+            lines.append(begin_string + stringify_value(item["value"], depth))
 
     return '\n'.join(chain('{', lines, [post_spacers + '}']))
 

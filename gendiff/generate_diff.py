@@ -43,22 +43,18 @@ def make_internal_view(item1: dict, item2: dict) -> list:
             diff.append({'name': key,
                          'value': item2[key],
                          'status': 'added'})
-
         elif key not in item2:
             diff.append({'name': key,
                          'value': item1[key],
                          'status': 'deleted'})
-
         elif item1[key] == item2[key]:
             diff.append({'name': key,
                          'value': item1[key],
                          'status': 'unchanged'})
-
         elif isinstance(item1[key], dict) and isinstance(item2[key], dict):
             diff.append({'name': key,
                          'children': make_internal_view(item1[key], item2[key]),
                          'status': 'nested_changes'})
-
         else:
             diff.append({'name': key,
                          'old_value': item1[key],
