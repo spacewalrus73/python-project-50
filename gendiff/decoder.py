@@ -1,30 +1,27 @@
 import json
 import yaml
-from typing import Any
 from yaml.loader import SafeLoader
 
 
-def to_decode(path: str, file_format: str) -> dict:
+def get_content(path: str) -> dict:
     with open(path, 'r') as f:
         file = f.read()
 
+    file_format = get_format(path)
+
     if file_format == 'json':
-        return from_json_to_dict(file)
+        return json.loads(file)
+    elif file_format == 'yml':
+        return yaml.load(file, Loader=SafeLoader)
     else:
-        return from_yaml_to_dict(file)
+        print("Programme stopped")
 
 
-def from_yaml_to_dict(file) -> dict:
-    return yaml.load(file, Loader=SafeLoader)
+def get_format(filepath: str) -> str:
 
-
-def from_json_to_dict(file) -> dict:
-    return json.loads(file)
-
-
-def to_encode(value: Any) -> str:
-
-    if isinstance(value, str):
-        return value
+    if filepath.endswith('.json'):
+        return 'json'
+    elif filepath.endswith(('.yml', '.yaml')):
+        return 'yml'
     else:
-        return json.JSONEncoder().encode(value)
+        print("Incorrect input file format. Use json or yml.")
