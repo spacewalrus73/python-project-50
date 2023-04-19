@@ -1,5 +1,5 @@
 from gendiff.formatters import format
-from gendiff.decoder import get_content
+from gendiff.converter import get_content
 
 
 def generate_diff(path1: str, path2: str, output_style='stylish') -> str:
